@@ -2,7 +2,7 @@
 Gender Pay Gap Analysis
 """
 
-import csv
+import pandas as pd
 
 FILENAME = "earnings.csv"
 
@@ -18,37 +18,37 @@ def get_top_pay_disparities(top_n):
         List of tuples: [(country, pay_gap_percentage), ...]
         Sorted by pay_gap_percentage descending
     """
-    with open(FILENAME, "r", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
-        data = list(reader)
+    df = pd.read_csv(FILENAME, encoding="utf-8-sig")
 
-    # mutiple rows per record for currencies, filter to USD normalized
-    usd_data = [
-        row for row in data if row.get("classif1.label") == "Currency: U.S. dollars"
-    ]
+    usd_data = df[df["classif1.label"] == "Currency: U.S. dollars"].copy()
+    filtered = usd_data[usd_data["sex.label"].isin(["Male", "Female"])]
 
-    country_earnings = {}
-    for row in usd_data:
-        country = row["area"]
-        sex = row["sex.label"]
-        value = float(row["obs_value"])
-        if country not in country_earnings:
-            country_earnings[country] = {"Male": [], "Female": []}
-        if sex in ["Male", "Female"]:
-            country_earnings[country][sex].append(value)
+    # group by country and sex, calculate average earnings
+    country_sex_avg = (
+        filtered.groupby(["area", "sex.label"])["obs_value"].mean().reset_index()
+    )
 
-    # average pay gap per country across whichever years are provided
-    results = []
-    for country, earnings in country_earnings.items():
-        # skip records with missing data
-        if earnings["Male"] and earnings["Female"]:
-            male_avg = sum(earnings["Male"]) / len(earnings["Male"])
-            female_avg = sum(earnings["Female"]) / len(earnings["Female"])
-            pay_gap = ((male_avg - female_avg) / male_avg) * 100
-            results.append((country, pay_gap))
+    # pivot to get M and F side-by-side
+    pivoted = country_sex_avg.pivot(
+        index="area", columns="sex.label", values="obs_value"
+    ).reset_index()
 
-    results.sort(key=lambda x: x[1], reverse=True)
-    return results[:top_n]
+    # drop rows with missing data
+    pivoted = pivoted.dropna()
+
+    # calculate pay gap
+    pivoted["pay_gap_percentage"] = (
+        (pivoted["Male"] - pivoted["Female"]) / pivoted["Male"]
+    ) * 100
+
+    # top N
+    results = (
+        pivoted[["area", "pay_gap_percentage"]]
+        .sort_values("pay_gap_percentage", ascending=False)
+        .head(top_n)
+    )
+
+    return list(results.itertuples(index=False, name=None))
 
 
 if __name__ == "__main__":
