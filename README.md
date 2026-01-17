@@ -93,7 +93,7 @@ This is showing a branch named `polars` with two commits, the latest is `92b25a5
 
 The `(polars)` indicates where the head of the branch currently sits.
 
-## Part 3. Perfomance Testing Pandas
+## Part 3. Trying `pandas`
 
 Let's use `git switch` to move over to the latest commit on the `pandas` branch.
 
@@ -214,7 +214,7 @@ It is possible for many branches to point to the same commit at a given moment i
 
 If you ever lose track of your active branch, type `git branch` to see the current status.
 
-## Part 5. `polars`
+## Part 5. Trying `polars`
 
 Polars is a newer dataframe library which is faster & has an API that is reminiscent of SQL that many people prefer.
 
@@ -359,7 +359,7 @@ $ git log --graph --oneline --all
 * 3dcc3d9 initial commit
 ```
 
-## Final Step. Cleaning Up
+## Part 7. Cleaning Up
 
 `git log` and `git branch` will still show the old branches, which we no longer need.
 
