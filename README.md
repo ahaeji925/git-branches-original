@@ -53,15 +53,28 @@ git commit -m "perftest.py"
 
 Let's visualize the commit history concisely graph using: `git log --graph --oneline`
 
-Our history begins at the bottom, with the most recent commit on top:
-
-- `...` (HEAD -> main) TODO (final commit)
-- `365e069` finished draft README
-- `f3aa1fd` documentation for part 2
-- `9f49e22` documentation for part 1
-- `3dcc3d9` initial commit"
+```
+*   abcdef0 HEAD, origin/main (current commit, hash incorrect)
+*   0930a44 Merge pull request #1 from uchicago-2026-capp30122/lab-review
+|\  
+| * b02aee6 updated README to correct typos, rephrase some instructions and add a commit step for the performance test to main
+|/  
+* 89b9563 copy edit
+* 02d6146 draft ready
+* 365e069 finished draft README
+* f3aa1fd documentation for part 2
+* 9f49e22 documentation for part 1
+* 3dcc3d9 initial commit
+ 
+```
 
 This is the history of our current branch, `main`.
+
+Our history begins at the bottom, with the most recent commit on top.
+
+You'll see that along the way, there is a commit on a branch (b02aee6) that was merged back into main (0930a44).
+
+(Note that the actual current commit isn't show in the above example because we can't predict the hash that adding this diagram will have created, but yours will have one more commit on top.)
 
 Type `git branch -r` to see a list of branches, you'll see that there are two others: `pandas` and `polars`.
 
@@ -88,15 +101,16 @@ The new commits that appear are branching off to the right:
 |/
 ```
 
-This is showing a branch named `pandas` with a single commit.
-
-This is showing a branch named `polars` with two commits, the latest is `92b25a5`:
+This line is showing a branch named `pandas` with a single commit.
 
 ```
 | * 92b25a5 (polars) polars implementation
 | * de76c5e add polars to project
 |/
 ```
+
+These two are showing a branch named `polars` with two commits, the latest is `92b25a5`:
+
 
 The `(polars)` indicates where the head of the branch currently sits.
 
