@@ -4,6 +4,7 @@ Gender Pay Gap Analysis
 
 import polars as pl
 
+
 FILENAME = "earnings.csv"
 
 
